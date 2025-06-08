@@ -1,12 +1,5 @@
-Xavier my name <3
-I loves u <3
-<3
-<3
-<3
-<3
-<3
-<3
-<3
-<3
-<3
-<3
+I just like physical contact from my favorite person (Lívia) <3
+...
+
+🎮 Roblox Dev | 🌀 Moon Animator Pro
+🎤 Singer: Melodic Trap, Emo Drill & Cinematic Vib
