@@ -1,0 +1,89 @@
+// This asynchronous function sends each line of a given script in a continuous loop.
+async function sendScriptLoop(scriptText, interval = 1) {
+    // Split the input text by newlines or tabs, trim each line, and remove any empty ones.
+    const lines = scriptText
+        .split(/[\n\t]+/)
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+
+    // Select the main chat container on the webpage.
+    const main = document.querySelector("#main");
+    if (!main) throw new Error("Main conversation element not found");
+
+    // Try to find the editable text area where messages are typed.
+    const textarea = main.querySelector('div[contenteditable="true"]');
+    if (!textarea) throw new Error("No open conversation found");
+
+    let counter = 0;
+
+    // Infinite loop to keep sending the messages.
+    while (true) {
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            console.log([${counter}] Sending: ${line});
+
+            // Focus the input area and clear any existing text.
+            textarea.focus();
+            document.execCommand("selectAll", false, null);
+            document.execCommand("delete", false, null);
+
+            // Insert the current line of text.
+            document.execCommand("insertText", false, line);
+
+            // Dispatch an input event to make sure the app registers the new input.
+            textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
+
+            // Wait a short time and then click the send button.
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    const sendButton = main.querySelector('[data-testid="send"]') || main.querySelector('[data-icon="send"]');
+                    if (sendButton) sendButton.click();
+                    resolve();
+                }, 100); // 100ms delay before sending
+            });
+
+            // Wait before moving to the next line (minimum viable delay).
+            await new Promise(resolve => setTimeout(resolve, 1));
+        }
+
+        counter++;
+        // Wait before starting the next loop iteration.
+        await new Promise(resolve => setTimeout(resolve, interval));
+    }
+}
+
+// Binary representation of "peido"
+const peidoInBinary = `
+01110000 01100101 01101001 01100100 01101111
+`;
+
+// Start the loop with the binary message and interval of 1ms.
+sendScriptLoop(peidoInBinary, 1);
+
+/*
+──────────────────────────────
+📘 HOW TO USE THIS SCRIPT ON WHATSAPP WEB
+──────────────────────────────
+
+1. Open WhatsApp Web:
+   → Go to: https://web.whatsapp.com
+
+2. Log in by scanning the QR code with your phone.
+
+3. Click on the contact or group where you want to send the message.
+
+4. Open Developer Tools:
+   → Right-click on the page and select “Inspect”
+   → OR press Ctrl+Shift+I (Windows) or Cmd+Option+I (Mac)
+
+5. Go to the “Console” tab.
+
+6. Paste the entire script above into the console.
+
+7. Press Enter to run it.
+
+🚨 WARNING:
+• Do NOT use for spam or abuse — you can be banned.
+• Use only for educational/testing purposes.
+• To stop the script, refresh the page or close the tab.
+*/
